@@ -1,10 +1,13 @@
 # Project template
 
-Files to copy into a new LaTeX project that uses these images:
+Files for a new LaTeX project that uses the images from [texlive-devcontainer](https://github.com/Steve-Li-1998/texlive-devcontainer). Start a repository from this template with **Use this template** on GitHub, or copy the files into an existing project:
 
 ```bash
-cp -r template/. /path/to/new-project/
+git clone --depth 1 https://github.com/Steve-Li-1998/texlive-devcontainer-template.git /tmp/tpl
+rm -rf /tmp/tpl/.git && cp -r /tmp/tpl/. /path/to/project/ && rm -rf /tmp/tpl
 ```
+
+This README is copied along; delete it or replace it with your project's own.
 
 | File | Purpose |
 |---|---|
