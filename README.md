@@ -49,3 +49,7 @@ Also check:
   ```
 - With `babel` and `ngerman`, use `\usepackage[ngerman,shorthands=off]{babel}`; the active `"` breaks rtex's live preview.
 - Load `minted` before `csquotes`; the other order warns about `fvextra` and `\@parboxrestore`.
+
+## License
+
+The template files are under the [MIT license](https://opensource.org/license/mit), copyright (c) 2026 Hao LI. Projects made from them can use any license.
