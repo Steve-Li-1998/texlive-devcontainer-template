@@ -1,12 +1,13 @@
 name: check-upstream
 
-# Daily: if the Realtime TeX extension has a newer release on the Marketplace, open (or update)
-# a pull request that bumps it in .devcontainer/devcontainer.json. texlive-devcontainer then
-# picks up the merged change through its template/ submodule.
+# Daily: if the Realtime TeX extension has a newer release on the Marketplace, open a pull
+# request that bumps it in .devcontainer/devcontainer.json and merge it right away (the PR
+# keeps a record). texlive-devcontainer's own daily check, an hour later, then moves its
+# template/ submodule here.
 # Runs only in the template repository, not in projects created from it.
 on:
   schedule:
-    - cron: "11 5 * * *"
+    - cron: "11 4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -53,7 +54,7 @@ jobs:
             echo
             echo "- Realtime TeX extension $OLD → [$NEW](https://github.com/HenryXiaoYang/realtime-tex-vsc-plugin/releases/tag/v$NEW)"
             echo
-            echo "After merging, texlive-devcontainer's daily check updates its \`template/\` submodule."
+            echo "Merged automatically. texlive-devcontainer's daily check then updates its \`template/\` submodule."
           } > body.md
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -66,3 +67,4 @@ jobs:
           else
             gh pr create --base main --head "$branch" --title "$title" --body-file body.md --label upstream-update
           fi
+          gh pr merge "$branch" --squash --delete-branch
