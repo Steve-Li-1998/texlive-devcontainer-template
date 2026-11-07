@@ -1,0 +1,41 @@
+name: build-pdf
+
+# Builds main.pdf in the ci image, like .gitlab-ci.yml. Change FILE_NAME if your main file is
+# named differently.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FILE_NAME: main
+  IMAGE: ghcr.io/steve-li-1998/texlive-ci:latest # public, no login needed
+
+jobs:
+  build-pdf:
+    # the template repository itself has no document to build
+    if: github.repository != 'Steve-Li-1998/texlive-devcontainer-template'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # The image is about 22 GB unpacked, more than the runner has free by default
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+
+      - name: Build the PDF
+        # .latexmkrc selects LuaLaTeX; the image's /etc/LatexMk adds -shell-escape
+        run: |
+          docker run --rm -v "$PWD":/work -w /work "$IMAGE" \
+            latexmk -interaction=nonstopmode -file-line-error -synctex=1 "$FILE_NAME.tex"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.FILE_NAME }}
+          path: |
+            ${{ env.FILE_NAME }}.pdf
+            ${{ env.FILE_NAME }}.log
+          retention-days: 7
