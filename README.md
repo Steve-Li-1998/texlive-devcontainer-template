@@ -12,31 +12,24 @@ This README is copied along; delete it or replace it with your project's own.
 | File | Purpose |
 |---|---|
 | `.devcontainer/devcontainer.json` | Opens the project in the prebuilt `dev` image, with rtex live preview and shell escape |
-| `.gitlab-ci.yml` | Builds `main.pdf` in the `ci` image |
+| `.gitlab-ci.yml` | Builds `main.pdf` in the `ci` image on GitLab |
+| `.github/workflows/build-pdf.yml` | Builds `main.pdf` in the `ci` image on GitHub |
 | `.latexmkrc` | Makes `latexmk` use LuaLaTeX |
 | `.gitignore` | Ignores LaTeX build files and minted/mermaid/plantuml output |
 
 ## After copying
 
-Replace the placeholders:
-
-| Placeholder | In | Example |
-|---|---|---|
-| `<IMAGE>` | `.devcontainer/devcontainer.json`, `.gitlab-ci.yml` | `registry.gitlab.fachschaften.org/masterarbeit/thesis/texlive` or `ghcr.io/steve-li-1998/texlive` |
-| `<PROJECT_NAME>` | `.devcontainer/devcontainer.json` | `Masterarbeit` |
-
-`<IMAGE>` is the base name of the two images: the dev container appends `-devcontainer:latest`, CI appends `-ci:latest`. For example:
+Replace the placeholder `<PROJECT_NAME>` in `.devcontainer/devcontainer.json` with your project's name, for example:
 
 ```bash
 cd /path/to/new-project
-sed -i 's|<IMAGE>|registry.gitlab.fachschaften.org/masterarbeit/thesis/texlive|; s|<PROJECT_NAME>|Masterarbeit|' \
-  .devcontainer/devcontainer.json .gitlab-ci.yml
+sed -i 's|<PROJECT_NAME>|Masterarbeit|' .devcontainer/devcontainer.json
 ```
 
 Also check:
 
-- **Main file:** CI builds `main.tex`. Change `FILE_NAME` in `.gitlab-ci.yml` if yours is named differently.
-- **Registry access:** `ghcr.io/steve-li-1998/texlive-devcontainer` and `ghcr.io/steve-li-1998/texlive-ci` are public and need no login. The GitLab registry images are private: run `docker login` for that registry before opening the dev container, and a GitLab CI job in another project can only pull them if that project is allowed in the image project's *Settings → CI/CD → Job token permissions*.
+- **CI:** keep the CI file for where your project is hosted and delete the other. Both build `main.tex`; change `FILE_NAME` in it if yours is named differently. A successful build keeps `main.pdf` for a week; a failed one keeps the whole working directory (logs, intermediate files, any partial PDF) instead.
+- **Registry access:** `ghcr.io/steve-li-1998/texlive-devcontainer` and `ghcr.io/steve-li-1998/texlive-ci` are public and need no login.
 ## Writing the document
 
 - Compile with LuaLaTeX. Under LuaLaTeX, don't load `\usepackage[T1]{fontenc}`: it turns `ß` into "SS" and `§` into "ğ". If the document must also build with pdfLaTeX, load it only there:
