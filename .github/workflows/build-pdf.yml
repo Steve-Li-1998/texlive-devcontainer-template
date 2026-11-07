@@ -32,10 +32,19 @@ jobs:
             latexmk -interaction=nonstopmode -file-line-error -synctex=1 "$FILE_NAME.tex"
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: ${{ env.FILE_NAME }}
+          path: ${{ env.FILE_NAME }}.pdf
+          retention-days: 7
+
+      # A failed build keeps the whole working directory (without .git): logs, intermediate
+      # files, any partial PDF
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ${{ env.FILE_NAME }}-failed-build
           path: |
-            ${{ env.FILE_NAME }}.pdf
-            ${{ env.FILE_NAME }}.log
+            .
+            !.git
+          include-hidden-files: true
           retention-days: 7
