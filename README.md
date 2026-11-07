@@ -28,7 +28,7 @@ sed -i 's|<PROJECT_NAME>|Masterarbeit|' .devcontainer/devcontainer.json
 
 Also check:
 
-- **CI:** keep the CI file for where your project is hosted and delete the other. Both build `main.tex`; change `FILE_NAME` in it if yours is named differently. A successful build keeps `main.pdf` for a week; a failed one keeps the whole working directory (logs, intermediate files, any partial PDF) instead.
+- **CI:** keep the CI file for where your project is hosted and delete the other. Both build the main file named in `.latexmkrc` (`main.tex`); if yours is named differently, change it there and in `realtimeTex.mainFile` and `latex-workshop.latex.search.rootFiles.include` in `.devcontainer/devcontainer.json`. A successful build keeps the PDF for a week; a failed one keeps the whole working directory (logs, intermediate files, any partial PDF) instead.
 - **Registry access:** `ghcr.io/steve-li-1998/texlive-devcontainer` and `ghcr.io/steve-li-1998/texlive-ci` are public and need no login.
 ## Writing the document
 

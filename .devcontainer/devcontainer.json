@@ -21,6 +21,9 @@
         "ltex-plus.vscode-ltex-plus"
       ],
       "settings": {
+        // The main file, as @default_files in .latexmkrc; change both if yours differs
+        "realtimeTex.mainFile": "main.tex",
+        "latex-workshop.latex.search.rootFiles.include": ["main.tex"],
         "realtimeTex.serverPath": "/usr/local/bin/rtex",
         "realtimeTex.texliveBin": "/usr/local/texlive/bin-current",
         // rtex is baked into the image; don't let the extension replace it
