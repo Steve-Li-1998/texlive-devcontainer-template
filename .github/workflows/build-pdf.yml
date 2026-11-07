@@ -1,14 +1,12 @@
 name: build-pdf
 
-# Builds main.pdf in the ci image, like .gitlab-ci.yml. Change FILE_NAME if your main file is
-# named differently.
+# Builds the PDF in the ci image, like .gitlab-ci.yml. The main file is set in .latexmkrc.
 on:
   push:
   pull_request:
   workflow_dispatch:
 
 env:
-  FILE_NAME: main
   IMAGE: ghcr.io/steve-li-1998/texlive-ci:latest # public, no login needed
 
 jobs:
@@ -26,15 +24,15 @@ jobs:
           tool-cache: true
 
       - name: Build the PDF
-        # .latexmkrc selects LuaLaTeX; the image's /etc/LatexMk adds -shell-escape
+        # .latexmkrc names the main file and selects LuaLaTeX; the image's /etc/LatexMk adds -shell-escape
         run: |
           docker run --rm -v "$PWD":/work -w /work "$IMAGE" \
-            latexmk -interaction=nonstopmode -file-line-error -synctex=1 "$FILE_NAME.tex"
+            latexmk -interaction=nonstopmode -file-line-error -synctex=1
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.FILE_NAME }}
-          path: ${{ env.FILE_NAME }}.pdf
+          name: pdf
+          path: "*.pdf"
           retention-days: 7
 
       # A failed build keeps the whole working directory (without .git): logs, intermediate
@@ -42,7 +40,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: ${{ env.FILE_NAME }}-failed-build
+          name: failed-build
           path: |
             .
             !.git

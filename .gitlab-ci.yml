@@ -1,13 +1,10 @@
-variables:
-  FILE_NAME: "main"
-
 build-pdf:
   stage: build
   # Public, no login needed
   image: ghcr.io/steve-li-1998/texlive-ci:latest
   script:
-    # .latexmkrc selects LuaLaTeX; the image's /etc/LatexMk adds -shell-escape
-    - latexmk -interaction=nonstopmode -file-line-error -synctex=1 "$FILE_NAME.tex"
+    # .latexmkrc names the main file and selects LuaLaTeX; the image's /etc/LatexMk adds -shell-escape
+    - latexmk -interaction=nonstopmode -file-line-error -synctex=1
   # A failed build keeps the whole working directory (without .git): logs, intermediate files,
   # any partial PDF
   after_script:
@@ -15,6 +12,6 @@ build-pdf:
   artifacts:
     when: always
     paths:
-      - $FILE_NAME.pdf
+      - "*.pdf"
       - failed-build.tar.gz
     expire_in: 1 week
